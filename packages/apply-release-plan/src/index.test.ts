@@ -1395,6 +1395,7 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(outdent`# pkg-a
 
       ## 1.1.0
+
       ### Minor Changes
 
       - Hey, let's have fun with testing!`);
@@ -1440,13 +1441,14 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(outdent`# pkg-a
 
       ## 1.1.0
+
       ### Minor Changes
 
       - Hey, let's have fun with testing!
 
       ### Patch Changes
 
-        - pkg-b@2.0.0`);
+      - pkg-b@2.0.0`);
 
       expect(readmeB.trim()).toEqual(outdent`# pkg-b
 
@@ -1546,13 +1548,13 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(
         [
           "# pkg-a\n",
-          "## 1.1.0",
+          "## 1.1.0\n",
           "### Minor Changes\n",
           "- Hey, let's have fun with testing!",
-          "- Random stuff",
-          "  \n  get it while it's hot!",
-          "- New feature, much wow",
-          "  \n  look at this shiny stuff!"
+          "- Random stuff\n",
+          "  get it while it's hot!\n",
+          "- New feature, much wow\n",
+          "  look at this shiny stuff!"
         ].join("\n")
       );
     });
@@ -1624,6 +1626,7 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(outdent`# pkg-a
 
       ## 1.0.4
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!
@@ -1633,6 +1636,7 @@ describe("apply release plan", () => {
       expect(readmeB.trim()).toEqual(outdent`# pkg-b
 
       ## 1.2.1
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!
@@ -1707,6 +1711,7 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(outdent`# pkg-a
 
       ## 1.0.4
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!`);
@@ -1714,6 +1719,7 @@ describe("apply release plan", () => {
       expect(readmeB.trim()).toEqual(outdent`# pkg-b
 
       ## 1.2.1
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!`);
@@ -1798,6 +1804,7 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(outdent`# pkg-a
 
       ## 1.0.4
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!`);
@@ -1805,6 +1812,7 @@ describe("apply release plan", () => {
       expect(readmeB.trim()).toEqual(outdent`# pkg-b
 
       ## 1.2.1
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!
@@ -1814,6 +1822,7 @@ describe("apply release plan", () => {
       expect(readmeC.trim()).toEqual(outdent`# pkg-c
 
       ## 2.1.0
+
       ### Minor Changes
 
       - Hey, let's have fun with testing!`);
@@ -1898,6 +1907,7 @@ describe("apply release plan", () => {
       expect(readme.trim()).toEqual(outdent`# pkg-a
 
       ## 1.0.4
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!`);
@@ -1905,6 +1915,7 @@ describe("apply release plan", () => {
       expect(readmeB.trim()).toEqual(outdent`# pkg-b
 
       ## 1.2.1
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!
@@ -1914,6 +1925,7 @@ describe("apply release plan", () => {
       expect(readmeC.trim()).toEqual(outdent`# pkg-c
 
       ## 2.0.1
+
       ### Patch Changes
 
       - Hey, let's have fun with testing!`);
@@ -2202,6 +2214,7 @@ describe("apply release plan", () => {
     ).toBe(`# pkg-a
 
 ## 1.1.0
+
 ### Minor Changes
 
 - ${lastCommit}: Hey, let's have fun with testing!
