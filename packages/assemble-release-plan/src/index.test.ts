@@ -4,6 +4,7 @@ import FakeFullState from "./test-utils";
 
 describe("assemble-release-plan", () => {
   let setup: FakeFullState;
+
   beforeEach(() => {
     setup = new FakeFullState();
 
@@ -29,6 +30,33 @@ describe("assemble-release-plan", () => {
       changesets: ["strange-words-combine"]
     });
   });
+
+  it("should assemble release plan for basic setup with snapshot", () => {
+    let { releases } = assembleReleasePlan(
+      setup.changesets,
+      setup.packages,
+      defaultConfig,
+      undefined,
+      true
+    );
+
+    expect(releases.length).toBe(1);
+    expect(/0\.0\.0-\d{14}/.test(releases[0].newVersion)).toBeTruthy();
+  });
+
+  it("should assemble release plan for basic setup with snapshot and tag", () => {
+    let { releases } = assembleReleasePlan(
+      setup.changesets,
+      setup.packages,
+      defaultConfig,
+      undefined,
+      "foo"
+    );
+
+    expect(releases.length).toBe(1);
+    expect(/0\.0\.0-foo-\d{14}/.test(releases[0].newVersion)).toBeTruthy();
+  });
+
   it("should assemble release plan with multiple packages", () => {
     setup.addChangeset({
       id: "big-cats-delight",
@@ -74,6 +102,53 @@ describe("assemble-release-plan", () => {
     expect(releases[0].type).toEqual("major");
     expect(releases[0].newVersion).toEqual("2.0.0");
   });
+  it("`none` changeset should not override other release types", () => {
+    setup.addChangeset({
+      id: "big-cats-delight",
+      releases: [
+        { name: "pkg-a", type: "none" },
+        { name: "pkg-b", type: "none" },
+        { name: "pkg-c", type: "none" }
+      ]
+    });
+    setup.addChangeset({
+      id: "big-cats-wonder",
+      releases: [
+        { name: "pkg-a", type: "patch" },
+        { name: "pkg-b", type: "minor" },
+        { name: "pkg-c", type: "major" }
+      ]
+    });
+    setup.addChangeset({
+      id: "big-cats-yelp",
+      releases: [
+        { name: "pkg-a", type: "none" },
+        { name: "pkg-b", type: "none" },
+        { name: "pkg-c", type: "none" }
+      ]
+    });
+
+    let { releases } = assembleReleasePlan(
+      setup.changesets,
+      setup.packages,
+      defaultConfig,
+      undefined
+    );
+
+    expect(releases.length).toEqual(3);
+
+    expect(releases[0].name).toEqual("pkg-a");
+    expect(releases[0].type).toEqual("patch");
+    expect(releases[0].newVersion).toEqual("1.0.1");
+
+    expect(releases[1].name).toEqual("pkg-b");
+    expect(releases[1].type).toEqual("minor");
+    expect(releases[1].newVersion).toEqual("1.1.0");
+
+    expect(releases[2].name).toEqual("pkg-c");
+    expect(releases[2].type).toEqual("major");
+    expect(releases[2].newVersion).toEqual("2.0.0");
+  });
   it("should assemble release plan with dependents", () => {
     setup.updateDependency("pkg-b", "pkg-a", "^1.0.0");
     setup.addChangeset({
@@ -114,7 +189,7 @@ describe("assemble-release-plan", () => {
     expect(releases[2].name).toEqual("pkg-c");
     expect(releases[2].newVersion).toEqual("1.0.1");
   });
-  it("should update a second dependent based on updating a first dependant", () => {
+  it("should update a second dependent based on updating a first dependent", () => {
     setup.updateDependency("pkg-b", "pkg-a", "1.0.0");
     setup.updateDependency("pkg-c", "pkg-b", "1.0.0");
 
@@ -497,7 +572,7 @@ Mixed changesets that contain both ignored and not ignored packages are not allo
       // Expected events:
       // - dependencies are checked, nothing leaves semver, nothing changes
       // - fixed are checked, pkg-a is aligned with pkg-b
-      // - depencencies are checked, in pkg-c the dependency range for pkg-a is not satisfied, so a patch bump is given to it
+      // - dependencies are checked, in pkg-c the dependency range for pkg-a is not satisfied, so a patch bump is given to it
       // - fixed are checked, pkg-c is aligned with pkg-d
       setup.addChangeset({
         id: "just-some-umbrellas",
@@ -670,7 +745,7 @@ Mixed changesets that contain both ignored and not ignored packages are not allo
       // Expected events:
       // - dependencies are checked, nothing leaves semver, nothing changes
       // - linked are checked, pkg-a is aligned with pkg-b
-      // - depencencies are checked, in pkg-c the dependency range for pkg-a is not satisfied, so a patch bump is given to it
+      // - dependencies are checked, in pkg-c the dependency range for pkg-a is not satisfied, so a patch bump is given to it
       // - linked are checked, pkg-c is aligned with pkg-d
       setup.addChangeset({
         id: "just-some-umbrellas",

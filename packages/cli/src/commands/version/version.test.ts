@@ -247,8 +247,8 @@ describe("running version in a simple project", () => {
     expect(changesetDir).toContain(".ignored-temporarily.md");
   });
 
-  it("should not update a dependant that uses a tag as a dependency rage for a package that could otherwise be local", async () => {
-    const cwd = await f.copy("dependant-with-tag-range");
+  it("should not update a dependent that uses a tag as a dependency rage for a package that could otherwise be local", async () => {
+    const cwd = await f.copy("dependent-with-tag-range");
 
     await writeChangeset(
       {
@@ -398,7 +398,7 @@ describe("workspace range", () => {
     ]);
   });
 
-  it("should bump dependant package when bumping a `workspace:*` dependency", async () => {
+  it("should bump dependent package when bumping a `workspace:*` dependency", async () => {
     const cwd = f.copy("simple-workspace-wildcard-range-dep");
 
     await writeChangeset(
@@ -426,7 +426,7 @@ describe("workspace range", () => {
     ]);
   });
 
-  it("should bump dependant package when bumping a `workspace:^` dependency", async () => {
+  it("should bump dependent package when bumping a `workspace:^` dependency", async () => {
     const cwd = f.copy("workspace-alias-range-dep");
 
     await writeChangeset(
@@ -499,14 +499,14 @@ describe("same package in different dependency types", () => {
 });
 
 describe("snapshot release", () => {
-  it("should update the packge to unique version no matter the kind of version bump it is", async () => {
+  it("should update the package to unique version no matter the kind of version bump it is", async () => {
     let cwd = f.copy("simple-project");
     await writeChangesets([simpleChangeset2], cwd);
     const spy = jest.spyOn(fs, "writeFile");
     await versionCommand(
       cwd,
       {
-        snapshot: "exprimental"
+        snapshot: "experimental"
       },
       {
         ...modifiedDefaultConfig,
@@ -516,14 +516,14 @@ describe("snapshot release", () => {
     expect(getPkgJSON("pkg-a", spy.mock.calls)).toEqual(
       expect.objectContaining({
         name: "pkg-a",
-        version: expect.stringContaining("0.0.0-exprimental-")
+        version: expect.stringContaining("0.0.0-experimental-")
       })
     );
 
     expect(getPkgJSON("pkg-b", spy.mock.calls)).toEqual(
       expect.objectContaining({
         name: "pkg-b",
-        version: expect.stringContaining("0.0.0-exprimental-")
+        version: expect.stringContaining("0.0.0-experimental-")
       })
     );
   });
@@ -538,7 +538,7 @@ describe("snapshot release", () => {
     await versionCommand(
       cwd,
       {
-        snapshot: "exprimental"
+        snapshot: "experimental"
       },
       {
         ...modifiedDefaultConfig,
@@ -623,7 +623,7 @@ describe("snapshot release", () => {
       await versionCommand(
         cwd,
         {
-          snapshot: "exprimental"
+          snapshot: "experimental"
         },
         {
           ...modifiedDefaultConfig,
@@ -637,14 +637,14 @@ describe("snapshot release", () => {
       expect(getPkgJSON("pkg-a", spy.mock.calls)).toEqual(
         expect.objectContaining({
           name: "pkg-a",
-          version: expect.stringContaining("1.1.0-exprimental-")
+          version: expect.stringContaining("1.1.0-experimental-")
         })
       );
 
       expect(getPkgJSON("pkg-b", spy.mock.calls)).toEqual(
         expect.objectContaining({
           name: "pkg-b",
-          version: expect.stringContaining("1.0.1-exprimental-")
+          version: expect.stringContaining("1.0.1-experimental-")
         })
       );
     });
@@ -1170,7 +1170,7 @@ describe("pre", () => {
       }
     ]);
   });
-  it("should use the highest bump type between all prereleases when versioning a dependant package", async () => {
+  it("should use the highest bump type between all prereleases when versioning a dependent package", async () => {
     let cwd = f.copy("simple-project");
     await pre(cwd, { command: "enter", tag: "next" });
 
@@ -1282,7 +1282,7 @@ describe("pre", () => {
       }
     ]);
   });
-  it("should bump dependant of prerelease package when bumping a `workspace:~` dependency", async () => {
+  it("should bump dependent of prerelease package when bumping a `workspace:~` dependency", async () => {
     const cwd = f.copy("workspace-alias-range-dep");
     await pre(cwd, { command: "enter", tag: "alpha" });
 
@@ -1408,7 +1408,7 @@ describe("pre", () => {
         }
       ]);
     });
-    it("should use the highest bump type between all prereleases for a linked package when versioning a dependant package", async () => {
+    it("should use the highest bump type between all prereleases for a linked package when versioning a dependent package", async () => {
       let linkedConfig = {
         ...modifiedDefaultConfig,
         linked: [["pkg-a", "pkg-b"]]
